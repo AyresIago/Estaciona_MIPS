@@ -31,9 +31,9 @@ achaVagaLivre:
 achaVagaLivre_loop:
     bge $t0, $t1, achaVagaLivre_lotado
 
-    sll $t3, $t0, 2
-    add $t3, $t2, $t3
-    lw $t4, 0($t3)
+    sll $t3, $t0, 2      # indice x 4
+    add $t3, $t2, $t3   # soma o deslocamento para entender
+    lw $t4, 0($t3)      # carrega
 
     beqz $t4, achaVagaLivre_achou
 

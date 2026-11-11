@@ -99,3 +99,30 @@ achaVagaLivre_lotado:
 achaVagaLivre_achou:
     move $v0, $t0
     jr $ra
+
+# ---------------------------------------------------
+
+achaCarro:
+    li $t0, 0
+    li $t1, 8
+    la $t2, placa
+
+achaCarro_loop:
+    bge $t0, $t1, achaCarro_nao_encontrado
+
+    sll $t3, $t0, 2
+    add $t3, $t2, $t3
+    lw $t4, 0($t3)
+
+    beq $t4, $a0, achaCarro_achou
+
+    addiu $t0, $t0, 1
+    j achaCarro_loop
+
+achaCarro_nao_encontrado:
+    li $v0, -1
+    jr $ra
+
+achaCarro_achou:
+    move $v0, $t0
+    jr $ra
