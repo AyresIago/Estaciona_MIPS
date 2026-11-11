@@ -73,3 +73,29 @@ lerInt_fim:
     lw $s2, 12($sp)
     addiu $sp, $sp, 16
     jr $ra
+
+
+    achaVagaLivre:
+    li $t0, 0
+    li $t1, 8
+    la $t2, placa
+
+achaVagaLivre_loop:
+    bge $t0, $t1, achaVagaLivre_lotado
+
+    sll $t3, $t0, 2
+    add $t3, $t2, $t3
+    lw $t4, 0($t3)
+
+    beqz $t4, achaVagaLivre_achou
+
+    addiu $t0, $t0, 1
+    j achaVagaLivre_loop
+
+achaVagaLivre_lotado:
+    li $v0, -1
+    jr $ra
+
+achaVagaLivre_achou:
+    move $v0, $t0
+    jr $ra
