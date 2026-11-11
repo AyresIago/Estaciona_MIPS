@@ -126,3 +126,93 @@ achaCarro_nao_encontrado:
 achaCarro_achou:
     move $v0, $t0
     jr $ra
+
+
+calculaTarifa:
+    li $t0, 15
+    ble $a0, $t0, tarifa_gratis
+
+    li $t0, 60
+    ble $a0, $t0, tarifa_primeira_hora
+
+    subu $t1, $a0, 60
+    addi $t1, $t1, 59
+    li $t2, 60
+    div $t1, $t2
+    mflo $t1
+
+    li $t3, 5
+    mul $t1, $t1, $t3
+    addi $v0, $t1, 10
+
+    li $t4, 50
+    bgt $v0, $t4, tarifa_teto
+    jr $ra
+
+tarifa_gratis:
+    li $v0, 0
+    jr $ra
+
+tarifa_primeira_hora:
+    li $v0, 10
+    jr $ra
+
+tarifa_teto:
+    li $v0, 50
+    jr $ra
+
+#------------------------------------------------------
+
+
+
+
+
+
+lerHora:
+    addiu $sp, $sp, -12
+    sw $ra, 0($sp)
+    sw $s0, 4($sp)
+    sw $s1, 8($sp)
+
+lerHora_pede_h:
+    la $a0, s_prompt_h
+    li $a1, 0
+    li $a2, 23
+    jal lerInt
+    move $s0, $v0
+    bltz $s0, lerHora_erro
+
+lerHora_pede_m:
+    la $a0, s_prompt_m
+    li $a1, 0
+    li $a2, 59
+    jal lerInt
+    move $s1, $v0
+    bltz $s1, lerHora_erro
+
+    li $t0, 60
+    mul $s0, $s0, $t0
+    add $s0, $s0, $s1
+
+    lw $t1, relogio
+    blt $s0, $t1, lerHora_voltou
+
+    sw $s0, relogio
+    move $v0, $s0
+    j lerHora_fim
+
+lerHora_voltou:
+    la $a0, s_err_voltou
+    li $v0, 4
+    syscall
+    j lerHora_pede_h
+
+lerHora_erro:
+    li $v0, -1
+
+lerHora_fim:
+    lw $ra, 0($sp)
+    lw $s0, 4($sp)
+    lw $s1, 8($sp)
+    addiu $sp, $sp, 12
+    jr $ra
